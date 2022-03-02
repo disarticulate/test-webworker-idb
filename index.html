@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Test indexeddb</title>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+  </body>
+<script>
+  let workers = Array(100).fill(10).map((_,i) => {
+    let w = new Worker('worker.js')
+    w.onmessage = (e) => {
+      const node = document.createElement("li")
+      const textnode = document.createTextNode(e.data)
+      node.appendChild(textnode);
+      document.querySelector('#messages').appendChild(node)
+    }
+    w.postMessage(`test-${i}`)
+    setTimeout(() => {
+      w.terminate()
+    }, 250)
+    return w
+  })
+</script>
+</html>
